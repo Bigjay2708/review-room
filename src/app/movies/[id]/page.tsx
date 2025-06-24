@@ -6,6 +6,11 @@ import ReviewSection from '@/components/movies/ReviewSection';
 import { formatDate, formatRuntime, formatCurrency } from '@/lib/utils';
 import { Suspense } from 'react';
 
+interface MoviePageParams {
+  params: Promise<{ id: string }>;
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
+
 async function getMovieData(id: string) {
   const movieId = parseInt(id);
   if (isNaN(movieId)) {
@@ -21,8 +26,9 @@ async function getMovieData(id: string) {
 
 export async function generateMetadata({
   params
-}: { params: { id: string } }): Promise<Metadata> {
-  const { movie } = await getMovieData(params.id);
+}: MoviePageParams): Promise<Metadata> {
+  const resolvedParams = await params;
+  const { movie } = await getMovieData(resolvedParams.id);
   
   return {
     title: `${movie.title} - Review Room`,
@@ -32,13 +38,9 @@ export async function generateMetadata({
 
 export default async function MovieDetailsPage({
   params
-}: { params: { id: string } }) {
-  const movieId = parseInt(params.id);
-  if (isNaN(movieId)) {
-    throw new Error('Invalid movie ID');
-  }
-
-  const { movie, videos } = await getMovieData(params.id);
+}: MoviePageParams) {
+  const resolvedParams = await params;
+  const { movie, videos } = await getMovieData(resolvedParams.id);
   
   // Find official trailer
   const trailer = videos.find(video => 
@@ -153,7 +155,7 @@ export default async function MovieDetailsPage({
         
         {/* Review Section */}
         <div className="container mx-auto px-4 py-12">
-          <ReviewSection movieId={movieId} movieTitle={movie.title} />
+          <ReviewSection movieId={parseInt(resolvedParams.id)} movieTitle={movie.title} />
         </div>
       </div>
     </Suspense>
