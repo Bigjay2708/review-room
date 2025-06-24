@@ -8,9 +8,9 @@ const nextConfig = {
         pathname: '/t/p/**',
       },
     ],
-  },
-  typescript: {
-    ignoreBuildErrors: true,
+  },  typescript: {
+    // Enable strict type checking during build
+    ignoreBuildErrors: false,
   },
 };
 
