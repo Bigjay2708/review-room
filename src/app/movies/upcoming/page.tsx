@@ -1,6 +1,7 @@
 import { getUpcomingMovies } from '@/lib/tmdb';
 import type { Movie } from '@/lib/tmdb';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import PaginatedMovieList from '@/components/movies/PaginatedMovieList';
 
 export const metadata: Metadata = {
@@ -23,11 +24,13 @@ export default async function UpcomingMoviesPage() {
         </p>
       </div>
       
-      <PaginatedMovieList
-        initialMovies={initialMovies}
-        totalPages={totalPages}
-        category="upcoming"
-      />
+      <Suspense fallback={<div>Loading movies...</div>}>
+        <PaginatedMovieList
+          initialMovies={initialMovies}
+          totalPages={totalPages}
+          category="upcoming"
+        />
+      </Suspense>
     </div>
   );
 }

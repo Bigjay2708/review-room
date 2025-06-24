@@ -1,8 +1,8 @@
 import { getTopRatedMovies } from '@/lib/tmdb';
 import type { Movie } from '@/lib/tmdb';
-import MovieGrid from '@/components/movies/MovieGrid';
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import ClientPagination from '@/components/ui/ClientPagination';
+import PaginatedMovieList from '@/components/movies/PaginatedMovieList';
 
 export const metadata: Metadata = {
   title: 'Top Rated Movies - Review Room',
@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 
 export default async function TopRatedMoviesPage() {
   // In Next.js 15, we need to completely avoid using searchParams directly
-  // Use default page 1 for server-side rendering
+  // Use default page 1 for server-side initial data
   const page = 1;
   
   // Fetch data for the first page only (client pagination will handle the rest)
   const data = await getTopRatedMovies(page);
-  const movies: Movie[] = data.results;
+  const initialMovies: Movie[] = data.results;
   const totalPages = data.total_pages > 500 ? 500 : data.total_pages;
   
   return (
@@ -28,12 +28,13 @@ export default async function TopRatedMoviesPage() {
         </p>
       </div>
       
-      <MovieGrid movies={movies} />
-      
-      {/* Client-side Pagination */}
-      <div className="mt-8">
-        <ClientPagination totalPages={totalPages} defaultPage={page} />
-      </div>
+      <Suspense fallback={<div>Loading movies...</div>}>
+        <PaginatedMovieList
+          initialMovies={initialMovies}
+          totalPages={totalPages}
+          category="top_rated"
+        />
+      </Suspense>
     </div>
   );
 }

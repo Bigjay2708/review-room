@@ -9,7 +9,7 @@ import { useSearchParams } from 'next/navigation';
 interface PaginatedMovieListProps {
   initialMovies: Movie[];
   totalPages: number;
-  category: 'popular' | 'upcoming' | 'top-rated';
+  category: 'popular' | 'upcoming' | 'top_rated';
   title?: string;
 }
 

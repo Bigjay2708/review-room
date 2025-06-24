@@ -1,5 +1,6 @@
 import { getPopularMovies } from '@/lib/tmdb';
 import type { Movie } from '@/lib/tmdb';
+import { Suspense } from 'react';
 import HeroBanner from '@/components/movies/HeroBanner';
 import Link from 'next/link';
 import PaginatedMovieList from '@/components/movies/PaginatedMovieList';
@@ -21,12 +22,14 @@ export default async function Home() {
       
       {/* Popular Movies with Pagination */}
       <div className="container mx-auto px-4">
-        <PaginatedMovieList 
-          initialMovies={restOfMovies}
-          totalPages={totalPages}
-          category="popular"
-          title="Popular Movies"
-        />
+        <Suspense fallback={<div>Loading movies...</div>}>
+          <PaginatedMovieList 
+            initialMovies={restOfMovies}
+            totalPages={totalPages}
+            category="popular"
+            title="Popular Movies"
+          />
+        </Suspense>
       </div>
       
       {/* Featured Categories */}
