@@ -8,6 +8,10 @@ import { Suspense } from 'react';
 
 async function getMovieData(id: string) {
   const movieId = parseInt(id);
+  if (isNaN(movieId)) {
+    throw new Error('Invalid movie ID');
+  }
+
   const [movie, videos] = await Promise.all([
     getMovieDetails(movieId),
     getMovieVideos(movieId)
@@ -15,14 +19,9 @@ async function getMovieData(id: string) {
   return { movie, videos };
 }
 
-type MoviePageProps = {
-  params: { id: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-};
-
 export async function generateMetadata({
   params
-}: MoviePageProps): Promise<Metadata> {
+}: { params: { id: string } }): Promise<Metadata> {
   const { movie } = await getMovieData(params.id);
   
   return {
@@ -33,9 +32,13 @@ export async function generateMetadata({
 
 export default async function MovieDetailsPage({
   params
-}: MoviePageProps) {
-  const { movie, videos } = await getMovieData(params.id);
+}: { params: { id: string } }) {
   const movieId = parseInt(params.id);
+  if (isNaN(movieId)) {
+    throw new Error('Invalid movie ID');
+  }
+
+  const { movie, videos } = await getMovieData(params.id);
   
   // Find official trailer
   const trailer = videos.find(video => 
