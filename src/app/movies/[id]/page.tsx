@@ -5,13 +5,10 @@ import { FaStar, FaClock, FaCalendarAlt, FaPlay } from 'react-icons/fa';
 import ReviewSection from '@/components/movies/ReviewSection';
 import { formatDate, formatRuntime, formatCurrency } from '@/lib/utils';
 import { Suspense } from 'react';
-
-type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+import { headers } from 'next/headers';
 
 async function getMovieData(id: string) {
+  "use server";
   const movieId = parseInt(id);
   const [movie, videos] = await Promise.all([
     getMovieDetails(movieId),
@@ -20,9 +17,12 @@ async function getMovieData(id: string) {
   return { movie, videos };
 }
 
-export async function generateMetadata(
-  { params }: Props
-): Promise<Metadata> {
+export async function generateMetadata({
+  params
+}: {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}): Promise<Metadata> {
   const { movie } = await getMovieData(params.id);
   
   return {
@@ -31,7 +31,15 @@ export async function generateMetadata(
   };
 }
 
-export default async function MovieDetailsPage({ params }: Props) {
+export default async function MovieDetailsPage({
+  params
+}: {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  // Ensure we're executing in a server context
+  headers();
+  
   const { movie, videos } = await getMovieData(params.id);
   const movieId = parseInt(params.id);
   
