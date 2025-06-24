@@ -5,13 +5,15 @@ import { FaStar, FaClock, FaCalendarAlt, FaPlay } from 'react-icons/fa';
 import ReviewSection from '@/components/movies/ReviewSection';
 import { formatDate, formatRuntime, formatCurrency } from '@/lib/utils';
 
-// Define the params type
-interface Params {
-  id: string;
+interface Props {
+  params: {
+    id: string;
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateMetadata(
-  { params }: { params: Params }
+  { params }: Props
 ): Promise<Metadata> {
   const id = params.id;
   const movieId = parseInt(id);
@@ -24,7 +26,7 @@ export async function generateMetadata(
 }
 
 export default async function MovieDetailsPage(
-  { params }: { params: Params }
+  { params }: Props
 ) {
   const id = params.id;
   const movieId = parseInt(id);
