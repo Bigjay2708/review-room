@@ -6,7 +6,6 @@ import Pagination from './Pagination';
 
 interface ClientPaginationProps {
   totalPages: number;
-  defaultPage?: number;
 }
 
 /**
@@ -14,7 +13,6 @@ interface ClientPaginationProps {
  */
 const ClientPagination: React.FC<ClientPaginationProps> = ({
   totalPages,
-  defaultPage = 1,
 }) => {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
 
