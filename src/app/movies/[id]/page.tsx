@@ -1,5 +1,5 @@
 import { getMovieDetails, getMovieVideos, getPosterUrl, getBackdropUrl } from '@/lib/tmdb';
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import { FaStar, FaClock, FaCalendarAlt, FaPlay } from 'react-icons/fa';
 import ReviewSection from '@/components/movies/ReviewSection';
@@ -11,8 +11,7 @@ type Props = {
 };
 
 export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
+  { params }: Props
 ): Promise<Metadata> {
   const id = params.id;
   const movieId = parseInt(id);
