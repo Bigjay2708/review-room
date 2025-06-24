@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 
 interface MoviePageParams {
   params: Promise<{ id: string }>;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 async function getMovieData(id: string) {
