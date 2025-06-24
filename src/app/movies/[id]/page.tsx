@@ -4,10 +4,15 @@ import Image from 'next/image';
 import { FaStar, FaClock, FaCalendarAlt, FaPlay } from 'react-icons/fa';
 import ReviewSection from '@/components/movies/ReviewSection';
 import { formatDate, formatRuntime, formatCurrency } from '@/lib/utils';
-import { use } from 'react';
+import { Suspense } from 'react';
+
+type PageProps = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
 export async function generateMetadata(
-  { params }: { params: { id: string } }
+  { params }: PageProps
 ): Promise<Metadata> {
   const id = params.id;
   const movieId = parseInt(id);
@@ -19,15 +24,12 @@ export async function generateMetadata(
   };
 }
 
-export default function MovieDetailsPage({ params }: { params: { id: string } }) {
-  // Use the use() hook to handle async data
-  const id = params.id;
+async function MovieDetails({ id }: { id: string }) {
   const movieId = parseInt(id);
-  const moviePromise = getMovieDetails(movieId);
-  const videosPromise = getMovieVideos(movieId);
-  
-  const movie = use(moviePromise);
-  const videos = use(videosPromise);
+  const [movie, videos] = await Promise.all([
+    getMovieDetails(movieId),
+    getMovieVideos(movieId)
+  ]);
   
   // Find official trailer
   const trailer = videos.find(video => 
@@ -141,5 +143,13 @@ export default function MovieDetailsPage({ params }: { params: { id: string } })
         <ReviewSection movieId={movieId} movieTitle={movie.title} />
       </div>
     </div>
+  );
+}
+
+export default async function MovieDetailsPage({ params }: PageProps) {
+  return (
+    <Suspense fallback={<div>Loading movie details...</div>}>
+      <MovieDetails id={params.id} />
+    </Suspense>
   );
 }
