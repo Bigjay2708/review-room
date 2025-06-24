@@ -1,19 +1,18 @@
 import { getMovieDetails, getMovieVideos, getPosterUrl, getBackdropUrl } from '@/lib/tmdb';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import Image from 'next/image';
 import { FaStar, FaClock, FaCalendarAlt, FaPlay } from 'react-icons/fa';
 import ReviewSection from '@/components/movies/ReviewSection';
 import { formatDate, formatRuntime, formatCurrency } from '@/lib/utils';
 
-interface Props {
-  params: {
-    id: string;
-  };
+type Props = {
+  params: { id: string };
   searchParams: { [key: string]: string | string[] | undefined };
-}
+};
 
 export async function generateMetadata(
-  { params }: Props
+  { params }: Props,
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
   const id = params.id;
   const movieId = parseInt(id);
