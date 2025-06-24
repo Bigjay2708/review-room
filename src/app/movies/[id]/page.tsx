@@ -5,7 +5,7 @@ import { FaStar, FaClock, FaCalendarAlt, FaPlay } from 'react-icons/fa';
 import ReviewSection from '@/components/movies/ReviewSection';
 import { formatDate, formatRuntime, formatCurrency } from '@/lib/utils';
 import { Suspense } from 'react';
-import { headers } from 'next/headers';
+import type { RouteParams } from '@/lib/route-types';
 
 async function getMovieData(id: string) {
   const movieId = parseInt(id);
@@ -18,10 +18,7 @@ async function getMovieData(id: string) {
 
 export async function generateMetadata({
   params
-}: {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}): Promise<Metadata> {
+}: RouteParams): Promise<Metadata> {
   const { movie } = await getMovieData(params.id);
   
   return {
@@ -30,17 +27,9 @@ export async function generateMetadata({
   };
 }
 
-interface MoviePageProps {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
 export default async function MovieDetailsPage({
   params
-}: MoviePageProps) {
-  // Ensure we're executing in a server context
-  headers();
-  
+}: RouteParams) {
   const { movie, videos } = await getMovieData(params.id);
   const movieId = parseInt(params.id);
   
