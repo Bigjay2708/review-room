@@ -8,7 +8,6 @@ import { Suspense } from 'react';
 import { headers } from 'next/headers';
 
 async function getMovieData(id: string) {
-  "use server";
   const movieId = parseInt(id);
   const [movie, videos] = await Promise.all([
     getMovieDetails(movieId),
@@ -31,12 +30,14 @@ export async function generateMetadata({
   };
 }
 
-export default async function MovieDetailsPage({
-  params
-}: {
+interface MoviePageProps {
   params: { id: string };
   searchParams: { [key: string]: string | string[] | undefined };
-}) {
+}
+
+export default async function MovieDetailsPage({
+  params
+}: MoviePageProps) {
   // Ensure we're executing in a server context
   headers();
   
