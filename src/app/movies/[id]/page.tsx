@@ -5,29 +5,16 @@ import { FaStar, FaClock, FaCalendarAlt, FaPlay } from 'react-icons/fa';
 import ReviewSection from '@/components/movies/ReviewSection';
 import { formatDate, formatRuntime, formatCurrency } from '@/lib/utils';
 
-// Define a Promise-like interface to satisfy Next.js type constraints
-interface PromiseLike<T> {
-  then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): PromiseLike<TResult1 | TResult2>;
-  catch<TResult = never>(
-    onrejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | undefined | null
-  ): PromiseLike<T | TResult>;
-  finally(onfinally?: (() => void) | undefined | null): PromiseLike<T>;
-  [Symbol.toStringTag]: string;
-}
-
-// Extending the params type to include Promise-like properties
-interface Params extends PromiseLike<{ id: string }> {
+// Define the params type
+interface Params {
   id: string;
 }
 
 export async function generateMetadata(
   { params }: { params: Params }
 ): Promise<Metadata> {
-  const id = params?.id;
-  const movieId = id ? parseInt(id) : 0;
+  const id = params.id;
+  const movieId = parseInt(id);
   const movie = await getMovieDetails(movieId);
   
   return {
@@ -39,17 +26,13 @@ export async function generateMetadata(
 export default async function MovieDetailsPage(
   { params }: { params: Params }
 ) {
-  const id = params?.id;
-  const movieId = id ? parseInt(id) : 0;
+  const id = params.id;
+  const movieId = parseInt(id);
   const movie = await getMovieDetails(movieId);
   const videos = await getMovieVideos(movieId);
   
   // Find official trailer
   const trailer = videos.find(video => 
-    video.type === 'Trailer' && 
-    video.site === 'YouTube' && 
-    video.official
-  ) || videos.find(video => 
     video.type === 'Trailer' && 
     video.site === 'YouTube'
   );
