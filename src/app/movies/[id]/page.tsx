@@ -1,17 +1,13 @@
-import { getMovieDetails, getMovieVideos, getPosterUrl, getBackdropUrl } from '@/lib/tmdb';
+import { getMovieDetails, getMovieVideos, getBackdropUrl, getPosterUrl } from '@/lib/tmdb';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { FaStar, FaClock, FaCalendarAlt, FaPlay } from 'react-icons/fa';
 import ReviewSection from '@/components/movies/ReviewSection';
 import { formatDate, formatRuntime, formatCurrency } from '@/lib/utils';
-
-type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+import { use } from 'react';
 
 export async function generateMetadata(
-  { params }: Props
+  { params }: { params: { id: string } }
 ): Promise<Metadata> {
   const id = params.id;
   const movieId = parseInt(id);
@@ -23,13 +19,15 @@ export async function generateMetadata(
   };
 }
 
-export default async function MovieDetailsPage(
-  { params }: Props
-) {
+export default function MovieDetailsPage({ params }: { params: { id: string } }) {
+  // Use the use() hook to handle async data
   const id = params.id;
   const movieId = parseInt(id);
-  const movie = await getMovieDetails(movieId);
-  const videos = await getMovieVideos(movieId);
+  const moviePromise = getMovieDetails(movieId);
+  const videosPromise = getMovieVideos(movieId);
+  
+  const movie = use(moviePromise);
+  const videos = use(videosPromise);
   
   // Find official trailer
   const trailer = videos.find(video => 
