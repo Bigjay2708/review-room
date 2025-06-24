@@ -1,3 +1,4 @@
 export interface RouteParams {
-  params: { [key: string]: string };
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
