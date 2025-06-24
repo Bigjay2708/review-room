@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_TMDB_API_KEY": "7724b652797ebd84ce8b198112443834",
+    "NEXT_PUBLIC_TMDB_BASE_URL": "https://api.themoviedb.org/3",
+    "NEXT_PUBLIC_TMDB_IMAGE_BASE_URL": "https://image.tmdb.org/t/p",
+    "TMDB_API_KEY": "7724b652797ebd84ce8b198112443834",
+    "TMDB_BASE_URL": "https://api.themoviedb.org/3",
+    "TMDB_IMAGE_BASE_URL": "https://image.tmdb.org/t/p",
+    "MONGODB_URI": "mongodb+srv://bigjay2708:agoodsecret@the-review-room-cluster.jn0xlcl.mongodb.net/review-room?retryWrites=true&w=majority&appName=the-review-room-cluster"
+  }
+}
